@@ -68,12 +68,16 @@ void createAccessPointAsWifi () {
 //  server.send(404, "text/html", "404: Not found"); // send http status 400 - not found
 //}
 
+int plane;
+int speed;
 // sau đó chạy thằng loop, như thăng main trong cpp
 void loop () {
     server.handleClient(); // listen http request từ client
+    plan = server.arg("plane");
+    speed = server.arg("speed");
 
     // nhận giá trị từ app mobile
-    robotMoving();
+    robotMoving(plane, speed);
     delay(1000); // 1s
 }
 
@@ -116,6 +120,26 @@ void turnright(int speed = 255){
     analogWrite(IN4_LEFT, 255-speed); // if is chân pwm
 }
 
-void robotMoving(){
+// ví dụ hiện tại điều khiển bằng cái app trên dt gì đó, sau méo biết cái loằn này dùng gì, hình như có dùng méo đâu, thiếu nhiều lắm
+void robotMoving(int plan, int speed = 255){
+    Serial.print("plane is: %d and speed is: %d\n", plan, speed);
 
+    // 1- up, 2-right, 3-down, 4-left
+    switch (plan) {
+    case 1:
+        up(speed);
+        break;
+    case 2:
+        turnright(speed);
+        break;
+    case 3:
+        down(speed);
+        break;
+    case 4:
+        turnleft(speed);
+        break;
+    default:
+        Serial.print("fuck\n");
+        break;
+    }
 }
